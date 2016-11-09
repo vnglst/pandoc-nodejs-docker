@@ -1,4 +1,4 @@
-FROM haskell:7.10
+FROM strages/pandoc-docker
 
 MAINTAINER Koen van Gilst <koen@koenvangilst.nl>
 
@@ -7,20 +7,7 @@ ENV NPM_CONFIG_LOGLEVEL info
 ENV NODEJS_VERSION 7.0.0
 ENV PANDOC_VERSION "1.16.0.2"
 
-# Install pandoc
-RUN cabal update && cabal install pandoc-${PANDOC_VERSION}
-
-# Install latex packages
-RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends \
-    curl \
-    texlive-latex-base \
-    texlive-xetex latex-xcolor \
-    texlive-math-extra \
-    texlive-latex-extra \
-    texlive-fonts-extra \
-    texlive-bibtex-extra \
-    fontconfig
+RUN apt-get update && apt-get install -y git git-core curl
 
 # Install Node
 
@@ -44,8 +31,4 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODEJS_VERSION/node-v$NODEJS_VERSION-li
   && tar -xzf "node-v$NODEJS_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODEJS_VERSION-linux-x64.tar.gz" SHASUMS256.txt.asc
 
-WORKDIR /source
-
-ENTRYPOINT ["/root/.cabal/bin/pandoc"]
-
-CMD ["--help"]
+CMD [ "node" ]
