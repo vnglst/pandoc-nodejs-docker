@@ -12,7 +12,7 @@ ENV NODEJS_VERSION 7.0.0
 # Install latex packages
 RUN apt-get update -y \
   && apt-get install -y --no-install-recommends \
-    curl \
+    curl
 
 # Install Node
 
