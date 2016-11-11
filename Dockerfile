@@ -7,7 +7,15 @@ ENV NPM_CONFIG_LOGLEVEL info
 ENV NODEJS_VERSION 7.0.0
 ENV PANDOC_VERSION "1.16.0.2"
 
-RUN apt-get update && apt-get install -y git git-core curl
+# Add package repo for Yarn
+RUN apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Add dependencies
+RUN apt-get update -y \
+  && apt-get install -y \
+  curl \
+  yarn
 
 # Install Node
 
