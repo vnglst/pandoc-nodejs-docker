@@ -1,24 +1,34 @@
-FROM strages/pandoc-docker
+FROM haskell:7.10.3
 
 MAINTAINER Koen van Gilst <koen@koenvangilst.nl>
 
-# ENV PANDOC_VERSION "1.16.0.2"
+# Updating this env variable will trigger automatic build
+ENV PANDOC_VERSION "1.16.0.2"
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODEJS_VERSION 7.0.0
-ENV PANDOC_VERSION "1.16.0.2"
+
+# install pandoc
+RUN cabal update \
+  && cabal install pandoc-${PANDOC_VERSION}
+
+# update /etc/apt/sources.list to stretch distribution
+RUN echo "deb http://ftp.us.debian.org/debian/ stretch main contrib non-free" | tee -a /etc/apt/sources.list
+RUN echo "deb-src http://ftp.us.debian.org/debian/ stretch main contrib non-free" | tee -a /etc/apt/sources.list
 
 # Add package repo for Yarn
 RUN apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-# Add dependencies
+# install latex packages
 RUN apt-get update -y \
-  && apt-get install -y \
-  curl \
-  yarn
+  && apt-get install -y --no-install-recommends --fix-missing \
+    texlive-full \
+    fontconfig \
+    curl \
+    yarn \
+  && apt-get clean -y  
 
 # Install Node
-
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
