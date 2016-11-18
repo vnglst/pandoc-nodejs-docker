@@ -1,9 +1,9 @@
-FROM haskell:7.10.3
+FROM haskell:8.0.1
 
 MAINTAINER Koen van Gilst <koen@koenvangilst.nl>
 
 # Updating this env variable will trigger automatic build
-ENV PANDOC_VERSION "1.16.0.2"
+ENV PANDOC_VERSION "1.18"
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODEJS_VERSION 7.0.0
 
